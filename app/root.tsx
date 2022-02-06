@@ -12,7 +12,8 @@ import type { MetaFunction } from "remix";
 import { Link } from "react-router-dom";
 import { getUser } from "./utils/session.server";
 import { User } from "@prisma/client";
-import { StoreProvider, useStoreContext } from "./store/context/context";
+import { StoreProvider } from "./store/context/context";
+import { db } from "./utils/db.server";
 
 export const meta: MetaFunction = () => {
   return { title: "New Remix App" };
@@ -20,11 +21,14 @@ export const meta: MetaFunction = () => {
 
 type LoaderData = {
   user: User | null;
+  products: {id: string, createdAt: string, updatedAt: string, name: string, description: string, discount: number, imageUrl: string, isAvailable: boolean, isFeatured: boolean, price: number}[];
 };
 
+// init data
 export let loader: LoaderFunction = async ({ request }) => {
   let user = await getUser(request);
-  return { user };
+  const products = await db.product.findMany();
+  return { user: user?.username, products };
 };
 
 function App() {
@@ -38,7 +42,7 @@ function App() {
         <Meta />
         <Links />
       </head>
-      <StoreProvider>
+      <StoreProvider initData={data}>
         <body>
           <link
             rel="stylesheet"
