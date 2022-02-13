@@ -1,6 +1,7 @@
 import { createCookieSessionStorage, redirect } from "remix";
 import { db } from "./db.server";
 import bcrypt from "bcryptjs";
+import { CartItem } from "~/models/ecommerce-provider.server";
 // also type def npm install --save-dev @types/bcryptjs
 
 type LoginType = {
@@ -49,7 +50,6 @@ let storage = createCookieSessionStorage({
 export async function createUserSession(userId: string, redirectTo: string) {
   let session = await storage.getSession();
   session.set("userId", userId);
-  console.log("set user session", session);
   return redirect(redirectTo, {
     headers: {
       "Set-Cookie": await storage.commitSession(session),
@@ -93,4 +93,24 @@ export async function logout(request: Request) {
       "Set-Cookie": await storage.destroySession(session),
     },
   });
+}
+
+let cartSessionKey = "cart";
+
+export async function getSession(
+  input: Request,
+  params: any
+) {
+  let session = await getUserSession(input);
+
+  return {
+    // TODO: Get and set cart from redis or something if user is logged in (could probably use a storage abstraction)
+    async getCart(): Promise<CartItem[]> {
+      let cart = JSON.parse(session.get(cartSessionKey) || "[]");
+      return cart;
+    },
+    async setCart(cart: CartItem[]) {
+      session.set(cartSessionKey, JSON.stringify(cart));
+    },
+  };
 }
