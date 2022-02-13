@@ -83,7 +83,7 @@ export function CatchBoundary() {
 };
 
 export default function Root() {
-  const data = useLoaderData();
+  const data = useLoaderData<LoaderData>();
 
     return (
         <App data={data}>
