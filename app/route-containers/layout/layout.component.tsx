@@ -19,7 +19,8 @@ export const meta: MetaFunction = () => {
 };
 // init data
 
-export function App({ children, data }: { children: React.ReactNode, data?: LoaderData }) {
+export function App({ children }: { children: React.ReactNode }) {
+  const data = useLoaderData<LoaderData>();
 
   return (
     <html lang="en">
@@ -40,7 +41,7 @@ export function App({ children, data }: { children: React.ReactNode, data?: Load
             <ul>
               <li>
                 <Link to="/">Home</Link>
-                <Link to="/hello">Hello</Link>
+                <Link to="/hello/world">Hello</Link>
                 {data?.user ? (
                   <div className="user-info">
                     <span>{`Hi ${data.user}`}</span>
@@ -83,10 +84,9 @@ export function CatchBoundary() {
 };
 
 export default function Root() {
-  const data = useLoaderData<LoaderData>();
 
     return (
-        <App data={data}>
+        <App>
             <Outlet />
         </App>
     );

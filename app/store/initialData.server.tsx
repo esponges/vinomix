@@ -1,4 +1,5 @@
 import { Product } from "@prisma/client";
+import { ShouldReloadFunction } from "remix";
 import { json, LoaderFunction } from "remix/server";
 import { CartItem } from "~/models/ecommerce-provider.server";
 import { db } from "~/utils/db.server";
@@ -14,7 +15,9 @@ export let loader: LoaderFunction = async ({ request }) => {
     let user = await getUser(request);
     const products = await db.product.findMany();
     const cartItems = await (await getSession(request, null)).getCart();
-    // console.log({ user: user?.username, products, cartItems });
+    console.log({ user: user?.username, products, cartItems });
     
     return json<LoaderData>({ user: user?.username, products, cartItems });
   };
+
+export const unstable_shouldReload: ShouldReloadFunction = () => false;
