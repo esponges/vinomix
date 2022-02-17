@@ -35,12 +35,15 @@ export let loader: LoaderFunction = async ({ request }) => {
   let user = await getUser(request);
   const products = await db.product.findMany();
   const cartItems = await (await getSession(request, null)).getCart();
-  console.log({ user: user?.username, products, cartItems });
+  console.log('im fetching data');
   
   return json<LoaderData>({ user: user?.username, products, cartItems });
 };
 
-export const unstable_shouldReload: ShouldReloadFunction = () => false;
+export const unstable_shouldReload: ShouldReloadFunction = ({ submission, params, url, prevUrl }) => {
+  console.log('unstable shoud reload', submission, params, url?.searchParams.entries(), prevUrl);
+  return submission?.method === 'POST';
+};
 
 export function App({ children }: { children: React.ReactNode }) {
   const data = useLoaderData();
