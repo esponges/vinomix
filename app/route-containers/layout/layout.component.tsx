@@ -1,26 +1,49 @@
 import {
+  json,
   Links,
   LiveReload,
+  LoaderFunction,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  ShouldReloadFunction,
   useLoaderData,
 } from "remix";
 import type { MetaFunction } from "remix";
 import { Link } from "react-router-dom";
-import { LoaderData } from "~/store/initialData.server";
 import { StoreProvider } from "~/store/context/context";
 import { GenericErrorBoundary } from "../boundaries/generic-error-boundary";
 import { GenericCatchBoundary } from "../boundaries/generic-catch-boundary";
+import { Product } from "@prisma/client";
+import { getSession, getUser } from "~/utils/session.server";
+import { db } from "~/utils/db.server";
+import { CartItem } from "~/models/ecommerce-provider.server";
 
 export const meta: MetaFunction = () => {
   return { title: "New Remix App" };
 };
+
 // init data
+export type LoaderData = {
+  user: string | undefined;
+  products: Product[];
+  cartItems: CartItem[];
+};
+
+export let loader: LoaderFunction = async ({ request }) => {
+  let user = await getUser(request);
+  const products = await db.product.findMany();
+  const cartItems = await (await getSession(request, null)).getCart();
+  console.log({ user: user?.username, products, cartItems });
+  
+  return json<LoaderData>({ user: user?.username, products, cartItems });
+};
+
+export const unstable_shouldReload: ShouldReloadFunction = () => false;
 
 export function App({ children }: { children: React.ReactNode }) {
-  const data = useLoaderData<LoaderData>();
+  const data = useLoaderData();
 
   return (
     <html lang="en">
