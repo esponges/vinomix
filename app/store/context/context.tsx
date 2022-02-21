@@ -1,14 +1,19 @@
+import { Product } from '@prisma/client';
 import * as React from 'react'
-import { Action, Actions, cartItemsReducer, productsReducer } from '../reducers/products';
+import { addToCart } from '../actions/products';
+import { Action, cartItemsReducer, productsReducer } from '../reducers/products';
 import { combineReducers } from '../rootReducer';
 
 export type State = {
   state: any
 }
 
+export type Dispatch = (action: Action) => void
+
 type StoreProviderReducerProps = {
   state: State,
-  dispatch: React.Dispatch<Actions>,
+  dispatch: Dispatch,
+  addToCart: (product: Product, dispatch: Dispatch) => void
 };
 
 type StoreProviderProps = {children: React.ReactNode, initData: any};
@@ -23,7 +28,7 @@ function StoreProvider({children, initData}: StoreProviderProps) {
   const [state, dispatch] = React.useReducer(reducers, {state: initData}); // dont really need products reducer, remove it in the future
   // NOTE: you *might* need to memoize this value
   // Learn more in http://kcd.im/optimize-context
-  const value = {state, dispatch};
+  const value = {state, dispatch, addToCart};
   return (
     <StoreContext.Provider value={value}>
       {children}
