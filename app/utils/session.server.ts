@@ -99,7 +99,6 @@ let cartSessionKey = "cart";
 
 export async function getSession(
   input: Request,
-  params: any
 ) {
   let session = await getUserSession(input);
 

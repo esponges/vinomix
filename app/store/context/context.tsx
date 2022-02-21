@@ -1,11 +1,15 @@
 import { Product } from '@prisma/client';
 import * as React from 'react'
+import { CartItem } from '~/models/ecommerce-provider.server';
 import { addToCart } from '../actions/products';
 import { Action, cartItemsReducer, productsReducer } from '../reducers/products';
 import { combineReducers } from '../rootReducer';
 
 export type State = {
-  state: any
+  state: {
+    products: Product[],
+    cartItems: CartItem[] | [],
+  }
 }
 
 export type Dispatch = (action: Action) => void
