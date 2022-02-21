@@ -113,8 +113,8 @@ export function App({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function ErrorBoundary() {
-  return <GenericErrorBoundary />;
+export function ErrorBoundary({ error }: { error: Error }) {
+  return <GenericErrorBoundary error={error} />;
 }
 
 export function CatchBoundary() {
@@ -127,4 +127,5 @@ export default function Root() {
       <Outlet />
     </App>
   );
-}
+};
+
