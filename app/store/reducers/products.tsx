@@ -1,6 +1,9 @@
+import { State } from "../context/context";
+
 export enum Actions {
   SET_PRODUCTS = 'SET_PRODUCTS',
   SET_CART = 'SET_CART',
+  REMOVE_FROM_CART = 'REMOVE_FROM_CART',
 }
 
 type Action = {
@@ -8,7 +11,7 @@ type Action = {
   payload: any;
 };
 
-export function productsReducer(state: any, action: Action) {
+export function productsReducer(state: State, action: Action) {
   switch (action.type) {
     case Actions.SET_PRODUCTS: {
       console.log('productsReducer', action.payload);
@@ -20,7 +23,7 @@ export function productsReducer(state: any, action: Action) {
   }
 }
 
-export function cartItemsReducer(state: any, action: Action) {
+export function cartItemsReducer(state: State, action: Action) {
   console.log(action.payload);
   switch (action.type) {
     case Actions.SET_CART: {
