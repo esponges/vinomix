@@ -1,6 +1,6 @@
 import { ActionFunction, LoaderFunction, redirect } from "remix/server";
 import { db } from "~/utils/db.server";
-import { useLoaderData } from "remix";
+import { useCatch, useLoaderData, useParams } from "remix";
 import { Product } from "@prisma/client";
 import { Container } from "semantic-ui-react";
 import { ProductCard } from "~/components/UI/organisms/product-card";
@@ -10,7 +10,7 @@ export const loader: LoaderFunction = async ({ params }) => {
     where: { id: params.productId },
   });
   if (!product) {
-    return redirect("/");
+    throw new Response("Product not found", { status: 404 });
   }
   return product;
 };
@@ -39,3 +39,16 @@ export default function ProductDetails() {
     </Container>
   );
 }
+
+// we already have generic catch boundaries for the entire app
+// however, we can also have catch boundaries for specific routes
+export function CatchBoundary() {
+  const caught = useCatch();
+  const params = useParams();
+
+  if (caught.status === 404) {
+    return <div>Can't find product with id {params.productId}!</div>;
+  }
+
+    throw new Error("Something went wrong")
+  }
