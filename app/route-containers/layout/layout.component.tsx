@@ -77,11 +77,14 @@ export function App({ children }: { children: React.ReactNode }) {
             >
               <Menu fixed="top" inverted pointing secondary size="large">
                 <Container>
-                  <Menu.Item as="a">
+                  <Menu.Item>
                     <Link to="/">Home</Link>
                   </Menu.Item>
                   <Menu.Item>
                     <Link to="/hello/world">Hello</Link>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <Link to="/product/product-list">List</Link>
                   </Menu.Item>
                   <Menu.Item position="right">
                     {data?.user ? (
@@ -99,7 +102,7 @@ export function App({ children }: { children: React.ReactNode }) {
                         </form>
                       </div>
                     ) : (
-                      <Button as="a" inverted>
+                      <Button inverted>
                         <Link to="/login">Login</Link>
                       </Button>
                     )}

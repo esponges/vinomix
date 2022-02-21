@@ -1,19 +1,26 @@
 import * as React from 'react'
-import { productsReducer } from '../reducers/products'
-import { Action } from '../reducers/products';
+import { Action, Actions, cartItemsReducer, productsReducer } from '../reducers/products';
+import { combineReducers } from '../rootReducer';
 
-type State = {state: any}
-type Dispatch = (action: Action) => void
-type StoreProviderProps = {children: React.ReactNode, initData: any}
+export type State = {
+  state: any
+}
 
-export type { State }
+type StoreProviderReducerProps = {
+  state: State,
+  dispatch: React.Dispatch<Actions>,
+};
+
+type StoreProviderProps = {children: React.ReactNode, initData: any};
 
 const StoreContext = React.createContext<
-  {state: State; dispatch: Dispatch} | undefined
->(undefined)
+  StoreProviderReducerProps | undefined
+>(undefined);
+
+const reducers = combineReducers(productsReducer, cartItemsReducer);
 
 function StoreProvider({children, initData}: StoreProviderProps) {
-  const [state, dispatch] = React.useReducer(productsReducer, {state: initData})
+  const [state, dispatch] = React.useReducer(reducers, {state: initData}); // dont really need products reducer, remove it in the future
   // NOTE: you *might* need to memoize this value
   // Learn more in http://kcd.im/optimize-context
   const value = {state, dispatch};
