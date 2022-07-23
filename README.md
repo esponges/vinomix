@@ -51,3 +51,74 @@ rm -rf app
 # copy your app over
 cp -R ../my-old-remix-app/app app
 ```
+
+
+### Prisma
+Borrowed from: https://remix.run/docs/en/v1/tutorials/jokes#set-up-prisma
+
+Initialize prisma with sqlite - if not done before in the app
+
+This will create the prisma folder 
+
+```sh
+npx prisma init --datasource-provider sqlite
+```
+
+that gives us this output:
+
+```sh
+✔ Your Prisma schema was created at prisma/schema.prisma
+  You can now open it in your favorite editor.
+
+warn You already have a .gitignore. Don't forget to exclude .env to not commit any secret.
+
+Next steps:
+1. Set the DATABASE_URL in the .env file to point to your existing database. If your database has no tables yet, read https://pris.ly/d/getting-started
+2. Run prisma db pull to turn your database schema into a Prisma schema.
+3. Run prisma generate to generate the Prisma Client. You can then start querying your database.
+
+More information in our documentation:
+https://pris.ly/d/getting-started
+```
+
+Now make prisma load variables from .env and sync the db with the Prisma schema:
+
+```sh
+npx prisma db push
+```
+
+Seeds are set in the prisma/seed.ts file
+
+To run seeders
+
+```sh
+node --require esbuild-register prisma/seed.ts
+```
+
+or which is the same 
+
+```sh
+ npx prisma db seed
+ ```
+
+Due to our custom package.json script
+
+To generate the data models
+
+```sh
+npx prisma db pull
+```
+
+Studio: 
+
+```sh
+npx prisma studio
+```
+
+Access to the database in a nice UI
+
+Deployment info https://remix.run/docs/en/v1/tutorials/jokes#deployment
+
+
+
+
